@@ -12,8 +12,7 @@ export const mockProperties = [
     sqft: 1850,
     type: "apartment",
     image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop",
-    featured: true,
-    coordinates: { lat: 17.4948, lng: 78.3996 }
+    featured: true
   },
   {
     id: 2,
@@ -25,8 +24,7 @@ export const mockProperties = [
     sqft: 3200,
     type: "house",
     image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop",
-    featured: true,
-    coordinates: { lat: 17.4948, lng: 78.3996 }
+    featured: true
 
   },
   {
@@ -39,8 +37,7 @@ export const mockProperties = [
     sqft: 650,
     type: "apartment",
     image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop",
-    featured: false,
-    coordinates: { lat: 17.4948, lng: 78.3996 }
+    featured: false
   },
   {
     id: 4,
@@ -52,8 +49,7 @@ export const mockProperties = [
     sqft: 2400,
     type: "house",
     image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&h=600&fit=crop",
-    featured: true,
-    coordinates: { lat: 17.4948, lng: 78.3996 }
+    featured: true
   },
   {
     id: 5,
@@ -65,8 +61,7 @@ export const mockProperties = [
     sqft: 2800,
     type: "apartment",
     image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop",
-    featured: false,
-    coordinates: { lat: 17.4948, lng: 78.3996 }
+    featured: false
   },
   {
     id: 6,
@@ -78,7 +73,6 @@ export const mockProperties = [
     sqft: 1600,
     type: "townhouse",
     image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop",
-    featured: false,
-    coordinates: { lat: 17.4948, lng: 78.3996 }
+    featured: false
   }
 ];
