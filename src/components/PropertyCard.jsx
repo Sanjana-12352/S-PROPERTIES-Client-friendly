@@ -1,9 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Square, Heart } from 'lucide-react';
 import './PropertyCard.css';
 
-const PropertyCard = ({ property, favorites, toggleFavorite, onViewDetails }) => {
+const PropertyCard = ({ property, favorites, toggleFavorite }) => {
+  const navigate = useNavigate();
   const isFavorite = favorites.includes(property.id);
+
+  const handleViewDetails = () => {
+    navigate(`/property/${property.id}`);
+  };
 
   return (
     <div className="property-card">
@@ -49,10 +55,10 @@ const PropertyCard = ({ property, favorites, toggleFavorite, onViewDetails }) =>
         </div>
         <div className="property-footer">
           <span className="property-price">
-            ₹ {property.price.toLocaleString()}
+            ₹{property.price.toLocaleString()}
           </span>
           <button 
-            onClick={() => onViewDetails(property)}
+            onClick={handleViewDetails}
             className="view-details-btn"
           >
             View Details

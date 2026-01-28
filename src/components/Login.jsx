@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../services/firebase';
 import './Login.css';
 
 const Login = ({ onSwitchToSignup, onSwitchToReset, onClose }) => {
@@ -34,21 +36,27 @@ const Login = ({ onSwitchToSignup, onSwitchToReset, onClose }) => {
     if (!validateForm()) return;
     
     setLoading(true);
+    setErrors({});
     
     try {
-      // TODO: Implement Firebase login
-      // const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('Login:', { email, password });
-      
-      // Simulate API call
-      setTimeout(() => {
-        setLoading(false);
-        alert('Login successful!');
-        onClose();
-      }, 1000);
+      // Firebase authentication
+      await signInWithEmailAndPassword(auth, email, password);
+      alert('Login successful!');
+      window.location.href = '/'; // Redirect to home
     } catch (error) {
       setLoading(false);
-      setErrors({ submit: error.message });
+      console.error('Login error:', error);
+      
+      // Handle specific Firebase errors
+      if (error.code === 'auth/user-not-found') {
+        setErrors({ submit: 'No account found with this email.' });
+      } else if (error.code === 'auth/wrong-password') {
+        setErrors({ submit: 'Incorrect password. Please try again.' });
+      } else if (error.code === 'auth/invalid-email') {
+        setErrors({ submit: 'Invalid email address.' });
+      } else {
+        setErrors({ submit: 'Login failed. Please try again.' });
+      }
     }
   };
 

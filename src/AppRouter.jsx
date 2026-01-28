@@ -19,6 +19,9 @@ import AdminDashboard from './components/AdminDashboard';
 import UserProfile from './components/UserProfile';
 import ContactForm from './components/ContactForm';
 import AdvancedFilters from './components/AdvancedFilters';
+import PropertyDetailsPage from './components/PropertyDetailsPage';
+import PropertyMap from './components/PropertyMap';
+import AdminAuth from './components/AdminAuth';
 
 import { mockProperties } from './data/mockdata';
 
@@ -100,16 +103,16 @@ const HomePage = () => {
           onClick={() => setShowFilters(true)}
           className="advanced-filters-btn"
         >
-          🔍 Advanced Filters
+           Advanced Filters
         </button>
       </div>
+      <PropertyMap properties={sortedProperties} />
       
       <PropertiesGrid 
         properties={sortedProperties}
         propertyType={propertyType}
         favorites={favorites}
         toggleFavorite={toggleFavorite}
-        onViewDetails={setSelectedProperty}
       />
       
       <CTASection />
@@ -135,7 +138,7 @@ const HomePage = () => {
   );
 };
 
-// Contact Page - Same as home contact section
+
 const ContactPage = () => {
   return (
     <div className="app">
@@ -167,7 +170,30 @@ const LoginPage = () => {
 
 // Admin Page Wrapper
 const AdminPage = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [properties, setProperties] = useState(mockProperties);
+  React.useEffect(() => {
+    const authStatus = localStorage.getItem('isAdminAuthenticated');
+    const authTime = localStorage.getItem('adminAuthTime');
+    
+    if (authStatus === 'true' && authTime) {
+      // Check if authentication is less than 24 hours old
+      const hoursSinceAuth = (new Date().getTime() - parseInt(authTime)) / (1000 * 60 * 60);
+      if (hoursSinceAuth < 24) {
+        setIsAuthenticated(true);
+      } else {
+        // Clear expired authentication
+        localStorage.removeItem('isAdminAuthenticated');
+        localStorage.removeItem('adminAuthTime');
+      }
+    }
+  }, []);
+
+  // If not authenticated, show password screen
+  if (!isAuthenticated) {
+    return <AdminAuth onAuthenticated={() => setIsAuthenticated(true)} />;
+  }
+
 
   const handleAddProperty = (newProperty) => {
     const property = {
@@ -209,7 +235,7 @@ const ProfilePage = () => {
 
   return (
     <UserProfile
-      user={{ name: 'John Doe', email: 'john@example.com' }}
+      user={{ name: 'Sanjana Reddy', email: 'sanjana@gmail.com' }}
       favorites={favorites}
       viewHistory={viewHistory}
       properties={mockProperties}
@@ -225,6 +251,7 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/property/:id" element={<PropertyDetailsPage properties={mockProperties} />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/admin" element={<AdminPage />} />

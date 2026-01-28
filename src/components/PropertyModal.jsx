@@ -4,8 +4,21 @@ import './PropertyModal.css';
 
 const PropertyModal = ({ property, onClose }) => {
   if (!property) return null;
+  const AGENT_PHONE = '+9182624047';
+  const AGENT_WHATSAPP = '9182624047'; // No + or spaces
 
-  return (
+  const handleScheduleViewing = () => {
+    window.location.href = `tel:${AGENT_PHONE}`;
+  };
+
+  const handleContactAgent = () => {
+    const message = encodeURIComponent(
+      `Hello! I'm interested in the property: ${property.title} (${property.location}) priced at ${property.price.toLocaleString()}`
+    );
+    window.open(`https://wa.me/${AGENT_WHATSAPP}?text=${message}`, '_blank');
+  };
+
+  reurn (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-image-container">
@@ -43,7 +56,7 @@ const PropertyModal = ({ property, onClose }) => {
           </div>
           <div className="modal-details">
             <h3 className="modal-price">
-              ${property.price.toLocaleString()}
+              ₹{property.price.toLocaleString()}
             </h3>
             <p className="modal-description">
               This beautiful {property.type} offers modern living at its finest. Located in the heart of {property.location}, 
@@ -52,11 +65,11 @@ const PropertyModal = ({ property, onClose }) => {
             </p>
           </div>
           <div className="modal-actions">
-            <button className="modal-btn-primary">
+            <button onClick={handleScheduleViewing} className="modal-btn-primary">
               <Phone className="btn-icon" />
               Schedule a Viewing
             </button>
-            <button className="modal-btn-secondary">
+            <button onClick={handleContactAgent} className="modal-btn-secondary">
               <Mail className="btn-icon" />
               Contact Agent
             </button>

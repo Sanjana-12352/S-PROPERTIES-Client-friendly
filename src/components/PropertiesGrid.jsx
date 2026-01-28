@@ -6,8 +6,7 @@ const PropertiesGrid = ({
   properties, 
   propertyType, 
   favorites, 
-  toggleFavorite, 
-  onViewDetails 
+  toggleFavorite
 }) => {
   const typeLabel = propertyType === 'all' 
     ? 'All Properties' 
@@ -30,7 +29,6 @@ const PropertiesGrid = ({
               property={property}
               favorites={favorites}
               toggleFavorite={toggleFavorite}
-              onViewDetails={onViewDetails}
             />
           ))}
         </div>

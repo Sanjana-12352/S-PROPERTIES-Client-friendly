@@ -65,6 +65,21 @@ const ContactForm = () => {
     if (!validateForm()) return;
 
     setLoading(true);
+    const message = `Hello! I'm ${formData.name}.
+    
+Email: ${formData.email}
+Phone: ${formData.phone}
+Subject: ${formData.subject}
+
+Message: ${formData.message}`;
+
+    const whatsappNumber = formData.phone.replace(/\D/g, ''); // Remove non-digits
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+    // Open WhatsApp
+    window.open(whatsappURL, '_blank');
+
 
     try {
       // TODO: Implement Firebase/Email service

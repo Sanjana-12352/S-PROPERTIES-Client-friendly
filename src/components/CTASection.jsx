@@ -4,7 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import './CTASection.css';
 
 const CTASection = () => {
+  const PHONE_NUMBER="9182624047"
+  const EMAIL='Maheshreddyduvvuri@s-properties.com'
+  const WHATSAPP_NUMBER='9182624047'
   const navigate = useNavigate();
+  const handleWhatsAppClick=()=>{
+    const message =encodeURIComponent('Hello! I would like to inquire about properties.');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+  }
 
   return (
     <div className="cta-section">
@@ -33,7 +40,7 @@ const CTASection = () => {
               </div>
               <h3 className="cta-card-title">Email Us</h3>
               <p className="cta-card-text">Get a quick response</p>
-              <a href="mailto:info@realestate.com" className="cta-link">
+              <a href="mailto:Maheshreddyduvvuri@s-properties.com" className="cta-link">
                 Maheshreddyduvvuri@s-properties.com
               </a>
             </div>
@@ -42,13 +49,13 @@ const CTASection = () => {
               <div className="cta-icon-wrapper">
                 <MessageCircle className="cta-icon" />
               </div>
-              <h3 className="cta-card-title">Message Us</h3>
-              <p className="cta-card-text">Fill out our contact form</p>
+              <h3 className="cta-card-title">WhatsApp Us</h3>
+              <p className="cta-card-text">Chat instantly</p>
               <button 
-                onClick={() => navigate('/contact')}
+                onClick={handleWhatsAppClick}
                 className="cta-button"
               >
-                Contact Form
+                Message on WhatsApp
               </button>
             </div>
           </div>

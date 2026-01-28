@@ -79,7 +79,7 @@ const AdminDashboard = ({ properties, onAddProperty, onEditProperty, onDeletePro
         <div className="stat-card">
           <h3>Average Price</h3>
           <p className="stat-value">
-            ${Math.round(properties.reduce((sum, p) => sum + p.price, 0) / properties.length).toLocaleString()}
+            ₹{Math.round(properties.reduce((sum, p) => sum + p.price, 0) / properties.length).toLocaleString()}
           </p>
         </div>
       </div>
@@ -114,7 +114,7 @@ const AdminDashboard = ({ properties, onAddProperty, onEditProperty, onDeletePro
                   <span className="type-badge">{property.type}</span>
                 </td>
                 <td>{property.location}</td>
-                <td className="price-cell">${property.price.toLocaleString()}</td>
+                <td className="price-cell">₹{property.price.toLocaleString()}</td>
                 <td>{property.beds}</td>
                 <td>{property.baths}</td>
                 <td>
@@ -173,6 +173,9 @@ const PropertyFormModal = ({ property, onClose, onSave }) => {
     image: '',
     featured: false
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(property?.image || '');
+  const [uploading, setUploading] = useState(false);
 
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -182,15 +185,45 @@ const PropertyFormModal = ({ property, onClose, onSave }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave({
+    setUploading(true);
+
+    let imageUrl = formData.image;
+
+    // If new image selected, upload to Firebase Storage
+    if (imageFile) {
+      // TODO: Integrate with Firebase Storage
+      // const uploadResult = await uploadPropertyImage(imageFile, Date.now());
+      // if (uploadResult.success) {
+      //   imageUrl = uploadResult.url;
+      // }
+      console.log('Image file selected:', imageFile.name);
+    }
+
+    const propertyData = {
       ...formData,
       price: Number(formData.price),
       beds: Number(formData.beds),
       baths: Number(formData.baths),
-      sqft: Number(formData.sqft)
-    });
+      sqft: Number(formData.sqft),
+      image: imageUrl || imagePreview
+    };
+
+    onSave(propertyData);
+    setUploading(false);
     onClose();
   };
 
@@ -218,7 +251,7 @@ const PropertyFormModal = ({ property, onClose, onSave }) => {
 
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label">Price ($)</label>
+              <label className="form-label">Price (₹)</label>
               <input
                 type="number"
                 name="price"
@@ -296,14 +329,31 @@ const PropertyFormModal = ({ property, onClose, onSave }) => {
 
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label">Image URL</label>
+              <label className="form-label">Property Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="form-input"
+              />
+              {imagePreview && (
+                <div className="image-preview-container">
+                  <img src={imagePreview} alt="Preview" className="image-preview" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Or Image URL</label>
               <input
                 type="url"
                 name="image"
                 value={formData.image}
                 onChange={handleChange}
                 className="form-input"
-                required
+                placeholder="https://example.com/image.jpg"
               />
             </div>
           </div>
@@ -322,11 +372,11 @@ const PropertyFormModal = ({ property, onClose, onSave }) => {
           </div>
 
           <div className="form-actions">
-            <button type="button" onClick={onClose} className="cancel-btn">
+            <button type="button" onClick={onClose} className="cancel-btn" disabled={uploading}>
               Cancel
             </button>
-            <button type="submit" className="save-btn">
-              {property ? 'Update' : 'Add'} Property
+            <button type="submit" className="save-btn" disabled={uploading}>
+              {uploading ? 'Uploading...' : (property ? 'Update' : 'Add')} Property
             </button>
           </div>
         </form>

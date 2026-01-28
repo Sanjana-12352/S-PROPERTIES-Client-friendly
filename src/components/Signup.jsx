@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, Phone } from 'lucide-react';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../services/firebase';
 import './Signup.css';
 
 const Signup = ({ onSwitchToLogin, onClose }) => {
@@ -61,21 +64,47 @@ const Signup = ({ onSwitchToLogin, onClose }) => {
     if (!validateForm()) return;
     
     setLoading(true);
+    setErrors({});
     
     try {
-      // TODO: Implement Firebase signup
-      // const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      console.log('Signup:', formData);
-      
-      // Simulate API call
-      setTimeout(() => {
-        setLoading(false);
-        alert('Account created successfully!');
-        onClose();
-      }, 1000);
+      // Create user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(
+        auth, 
+        formData.email, 
+        formData.password
+      );
+
+      // Update user profile with name
+      await updateProfile(userCredential.user, {
+        displayName: formData.name
+      });
+
+      // Create user document in Firestore
+      await setDoc(doc(db, 'users', userCredential.user.uid), {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        createdAt: new Date().toISOString(),
+        favorites: [],
+        viewHistory: []
+      });
+
+      alert('Account created successfully!');
+      window.location.href = '/'; // Redirect to home
     } catch (error) {
       setLoading(false);
-      setErrors({ submit: error.message });
+      console.error('Signup error:', error);
+      
+      // Handle specific Firebase errors
+      if (error.code === 'auth/email-already-in-use') {
+        setErrors({ submit: 'Email already in use. Please use a different email.' });
+      } else if (error.code === 'auth/weak-password') {
+        setErrors({ submit: 'Password is too weak. Please use a stronger password.' });
+      } else if (error.code === 'auth/invalid-email') {
+        setErrors({ submit: 'Invalid email address.' });
+      } else {
+        setErrors({ submit: 'Signup failed. Please try again.' });
+      }
     }
   };
 

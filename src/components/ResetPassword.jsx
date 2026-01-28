@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, ArrowLeft } from 'lucide-react';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../services/firebase';
 import './ResetPassword.css';
 
 const ResetPassword = ({ onSwitchToLogin }) => {
@@ -27,20 +29,24 @@ const ResetPassword = ({ onSwitchToLogin }) => {
     if (!validateForm()) return;
     
     setLoading(true);
+    setErrors({});
     
     try {
-      // TODO: Implement Firebase password reset
-      // await sendPasswordResetEmail(auth, email);
-      console.log('Reset password for:', email);
-      
-      // Simulate API call
-      setTimeout(() => {
-        setLoading(false);
-        setSuccess(true);
-      }, 1000);
+      // Send password reset email via Firebase
+      await sendPasswordResetEmail(auth, email);
+      setLoading(false);
+      setSuccess(true);
     } catch (error) {
       setLoading(false);
-      setErrors({ submit: error.message });
+      console.error('Reset password error:', error);
+      
+      if (error.code === 'auth/user-not-found') {
+        setErrors({ submit: 'No account found with this email.' });
+      } else if (error.code === 'auth/invalid-email') {
+        setErrors({ submit: 'Invalid email address.' });
+      } else {
+        setErrors({ submit: 'Failed to send reset email. Please try again.' });
+      }
     }
   };
 
