@@ -1,0 +1,7 @@
+/* Signup uses same styles as Login */
+@import './Login.css';
+
+/* Override for larger card on signup */
+.auth-card {
+  max-width: 480px;
+}
