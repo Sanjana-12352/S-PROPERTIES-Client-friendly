@@ -8,13 +8,14 @@ const PropertyMap = ({ properties }) => {
   const [selectedProperty, setSelectedProperty] = useState(null);
   
   // YOUR GOOGLE MAPS API KEY HERE
-  const GOOGLE_MAPS_API_KEY = 'AIzaSyBsrW_OhRQ-kKCONB6l7GPEeQjdCesCyDU';
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+;
 
   // LESSON: Load Google Maps API
   // This hook loads the Google Maps script
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY
+    googleMapsApiKey: apiKey
   });
 
   // LESSON: Map container styling
