@@ -29,8 +29,8 @@ const PropertyMap = ({ properties }) => {
   // LESSON: Center of the map
   // We'll center on USA (you can change this)
   const center = {
-    lat: 17.3850 , 
-    lng: 78.4867
+    lat: 20.5937, 
+    lng: 78.9629
   };
 
   
