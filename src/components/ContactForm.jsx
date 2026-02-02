@@ -142,7 +142,7 @@ Message: ${formData.message}`;
               </div>
               <div className="detail-text">
                 <h3>Email Us</h3>
-                <p>Mheshwarreddy@s-properties.com<br />supports-properties.com</p>
+                <p>Maheshwarreddy@s-properties.com<br />supports-properties.com</p>
               </div>
             </div>
           </div>
