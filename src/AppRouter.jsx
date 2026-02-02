@@ -20,7 +20,6 @@ import UserProfile from './components/UserProfile';
 import ContactForm from './components/ContactForm';
 import AdvancedFilters from './components/AdvancedFilters';
 import PropertyDetailsPage from './components/PropertyDetailsPage';
-import PropertyMap from './components/PropertyMap';
 import AdminAuth from './components/AdminAuth';
 
 import { mockProperties } from './data/mockData';
@@ -106,7 +105,7 @@ const HomePage = () => {
            Advanced Filters
         </button>
       </div>
-      <PropertyMap properties={sortedProperties} />
+      
       
       <PropertiesGrid 
         properties={sortedProperties}
