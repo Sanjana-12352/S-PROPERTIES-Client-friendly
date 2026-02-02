@@ -23,7 +23,7 @@ import PropertyDetailsPage from './components/PropertyDetailsPage';
 import PropertyMap from './components/PropertyMap';
 import AdminAuth from './components/AdminAuth';
 
-import { mockProperties } from './data/mockdata';
+import { mockProperties } from './data/mockData';
 
 // Home Page Component
 const HomePage = () => {

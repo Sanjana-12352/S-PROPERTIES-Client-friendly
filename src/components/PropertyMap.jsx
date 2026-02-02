@@ -7,39 +7,35 @@ const PropertyMap = ({ properties }) => {
   const navigate = useNavigate();
   const [selectedProperty, setSelectedProperty] = useState(null);
   
-  // YOUR GOOGLE MAPS API KEY HERE
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-;
+  // Use environment variable for API key
+  const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
 
-  // LESSON: Load Google Maps API
-  // This hook loads the Google Maps script
+  // Load Google Maps API
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: apiKey
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY
   });
 
-  // LESSON: Map container styling
-  // This defines how big the map will be
+  // Map container styling
   const mapContainerStyle = {
     width: '100%',
     height: '600px',
     borderRadius: '12px'
   };
 
-  // LESSON: Center of the map
-  // We'll center on USA (you can change this)
+  // Center on Miyapur, Telangana, India
   const center = {
-    lat: 20.5937, 
-    lng: 78.9629
+    lat: 17.4948, // Miyapur latitude
+    lng: 78.3563  // Miyapur longitude
   };
 
-  
+  // Map options with dark theme
   const mapOptions = {
-    zoom: 4, // How zoomed in (1 = world, 20 = street level)
-    mapTypeControl: true, // Show satellite/terrain options
-    streetViewControl: true, // Show street view
-    fullscreenControl: true, // Show fullscreen button
-    styles: [ // Custom dark theme for your black background
+    zoom: 12, // Zoom level for city view
+    mapTypeControl: true,
+    streetViewControl: true,
+    fullscreenControl: true,
+    styles: [
       {
         elementType: 'geometry',
         stylers: [{ color: '#212121' }]
@@ -59,23 +55,34 @@ const PropertyMap = ({ properties }) => {
     ]
   };
 
-  // LESSON: Handle marker click
-  // When user clicks a marker, show property info
+  // Handle marker click
   const handleMarkerClick = (property) => {
     setSelectedProperty(property);
   };
 
-  // LESSON: Handle info window close
+  // Handle info window close
   const handleInfoWindowClose = () => {
     setSelectedProperty(null);
   };
 
-  // LESSON: Navigate to property details
+  // Navigate to property details
   const handleViewProperty = (propertyId) => {
     navigate(`/property/${propertyId}`);
   };
 
-  // LESSON: Show loading state
+  // If no API key, show message
+  if (!GOOGLE_MAPS_API_KEY) {
+    return (
+      <div className="map-loading">
+        <p>Google Maps API key not configured</p>
+        <p style={{ fontSize: '0.875rem', color: '#9ca3af', marginTop: '0.5rem' }}>
+          Set REACT_APP_GOOGLE_MAPS_API_KEY in your environment variables
+        </p>
+      </div>
+    );
+  }
+
+  // Show loading state
   if (!isLoaded) {
     return (
       <div className="map-loading">
@@ -90,28 +97,27 @@ const PropertyMap = ({ properties }) => {
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={center}
-        zoom={4}
+        zoom={12}
         options={mapOptions}
       >
-        {/* LESSON: Create markers for each property */}
+        {/* Create markers for each property */}
         {properties.map((property) => (
-          property.coordinates && ( // Only show if coordinates exist
+          property.coordinates && (
             <Marker
               key={property.id}
               position={property.coordinates}
               onClick={() => handleMarkerClick(property)}
               icon={{
-                // Custom marker icon
                 url: property.featured 
-                  ? 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' // Blue for featured
-                  : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // Red for regular
+                  ? 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                  : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
                 scaledSize: new window.google.maps.Size(40, 40)
               }}
             />
           )
         ))}
 
-        {/* LESSON: Info Window - Shows when marker is clicked */}
+        {/* Info Window */}
         {selectedProperty && (
           <InfoWindow
             position={selectedProperty.coordinates}
